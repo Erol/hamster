@@ -1,0 +1,17 @@
+h1 Server-Side Demo
+
+h2 Feature Toggle
+
+- if features[0].variant == 'new'
+  p(style="color:#{features[0].attachment.color}") User should see the New Feature
+- else
+  p User should not see the New Feature
+
+h2 Experiment A
+
+- if features[1].variant == 'variant_1'
+  p(style="color:#{features[1].attachment.color}") User should see Variant 1.
+- elsif features[1].variant == 'variant_2'
+  p(style="color:#{features[1].attachment.color}") User should see Variant 2.
+- else
+  p User is not part of the experiment.

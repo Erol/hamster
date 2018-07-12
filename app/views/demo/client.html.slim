@@ -1,0 +1,56 @@
+<h1>Client-Side Demo</h1>
+
+<h2>Feature Toggle</h2>
+
+#feature1
+
+<h2>Experiment A</h2>
+
+#feature2
+
+javascript:
+  function renderFeatures() {
+    var entityID = window.location.hash.substr(1);
+
+    $.ajax({
+      url: 'http://localhost:18000/api/v1/evaluation',
+      type: 'post',
+      contentType: 'application/json',
+      data: JSON.stringify({ entityID: entityID, entityType: 'user', flagID: 1 }),
+      success: function(feature) {
+        if (feature.variantKey == 'new') {
+          $('#feature1').html('<p>User should see the New Feature.</p>');
+          $('#feature1 p').css('color', feature.variantAttachment.color);
+        }
+        else {
+          $('#feature1').html('<p>User should not see the New Feature.</p>');
+        }
+      }
+    });
+
+    $.ajax({
+      url: 'http://localhost:18000/api/v1/evaluation',
+      type: 'post',
+      contentType: 'application/json',
+      data: JSON.stringify({ entityID: entityID, entityType: 'user', flagID: 2 }),
+      success: function(feature) {
+        if (feature.variantKey == 'variant_1') {
+          $('#feature2').html('<p>User should see Variant 1.</p>');
+          $('#feature2 p').css('color', feature.variantAttachment.color);
+        }
+        else if (feature.variantKey == 'variant_2') {
+          $('#feature2').html('<p>User should see Variant 2.</p>');
+          $('#feature2 p').css('color', feature.variantAttachment.color);
+        }
+        else {
+          $('#feature2').html('<p>User is not part of the experiment.</p>')
+        }
+      }
+    });
+  }
+
+  $(window).on('hashchange', function() {
+    renderFeatures();
+  });
+
+  renderFeatures();
